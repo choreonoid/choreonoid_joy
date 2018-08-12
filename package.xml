@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>choreonoid_joy</name>
+  <version>0.0.0</version>
+  <description>The choreonoid_joy package</description>
+  <maintainer email="s.nakaoka@gmail.com">Shin'ichiro Nakaoka</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>choreonoid</build_depend>
+  <exec_depend>choreonoid</exec_depend>
+</package>
