@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8.3)
 project(choreonoid_joy)
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+    FORCE)
 endif()
 
 find_package(catkin REQUIRED COMPONENTS
