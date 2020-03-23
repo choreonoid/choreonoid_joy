@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
 #include <cnoid/Joystick>
+#include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -8,24 +10,34 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "choreonoid_joy");
 
-    cnoid::Joystick joystick;
-    if(!joystick.isReady()){
-        cerr << joystick.errorMessage() << endl;
-        return 1;
-    }
-
-    int seq = 0;
-    bool stateChanged = false;
-    
-    joystick.sigButton().connect([&](int, bool){ stateChanged = true; });
-    joystick.sigAxis().connect([&](int, double){ stateChanged = true; });
-        
     ros::NodeHandle node;
     ros::Publisher publisher = node.advertise<sensor_msgs::Joy>("joy", 30);
-
     ros::Rate loop_rate(60);
+    int seq = 0;
+    bool stateChanged = false;
+    cnoid::Joystick joystick;
 
+    joystick.sigButton().connect(
+        [&](int, bool){ stateChanged = true; });
+    joystick.sigAxis().connect(
+        [&](int, double){ stateChanged = true; });
+
+    if(!joystick.isReady()){
+        cout << "Joystick is not ready." << endl;
+    }
+    bool isBeforeInitialReading = true;
+    
     while(ros::ok()){
+        if(!joystick.isReady()){
+            if(!joystick.makeReady()){
+                usleep(500000);
+                continue;
+            }
+        }
+        if(isBeforeInitialReading){
+            cout << "Joystick \"" << joystick.device() << "\" is ready." << endl;
+            isBeforeInitialReading = false;
+        }
         joystick.readCurrentState();
         if(stateChanged){
             sensor_msgs::Joy joy;
