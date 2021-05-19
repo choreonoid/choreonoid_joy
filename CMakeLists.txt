@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5.0)
 project(choreonoid_joy)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -25,22 +25,11 @@ else()
   add_compile_options(-std=c++11)
 endif()
 
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-  ${CHOREONOID_INCLUDE_DIRS}
-)
-
-link_directories(
-  ${CHOREONOID_LIBRARY_DIRS}
-  )
+include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME}_node src/choreonoid_joy_node.cpp)
-
 set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-
-## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}_node
-  ${CHOREONOID_UTIL_LIBRARIES} ${catkin_LIBRARIES}
+target_link_libraries(${PROJECT_NAME}_node Choreonoid::CnoidUtil ${catkin_LIBRARIES}
   )
 
 install(TARGETS ${PROJECT_NAME}_node
@@ -48,10 +37,3 @@ install(TARGETS ${PROJECT_NAME}_node
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   )
-
-## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-#   # myfile1
-#   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
